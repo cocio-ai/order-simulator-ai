@@ -20,7 +20,12 @@
     <div class="grid-container">
         <div class="panel input-panel">
             <h2 class="panel-title">1. GOT画面 撮影・読込</h2>
-            <p class="panel-desc">カメラで「4週間一覧表」等の画面を撮影してください。</p>
+            <div class="panel-desc" style="background: rgba(0,136,90,0.1); padding: 12px; border-radius: 8px; border-left: 4px solid var(--seven-green); margin-bottom: 16px;">
+                <strong>💡 撮影のコツ</strong><br>
+                ① 4週間一覧表は、一番下の<strong>「週平均」</strong>が見えるようにスクロールして撮影。<br>
+                ② 続いて<strong>「在庫推移表」</strong>の画面を開き、現在庫が見えるように撮影。<br>
+                ※複数回撮影するとデータが合体して読み込まれます。
+            </div>
             
             <div class="camera-container">
                 <video id="cameraVideo" autoplay playsinline muted></video>
@@ -28,7 +33,7 @@
                 
                 <div id="ocrStatus" class="ocr-status" style="display:none;">
                     <div class="spinner"></div>
-                    <span id="ocrStatusText">AIが文字を解析中...</span>
+                    <span id="ocrStatusText">AIエンジン初期化中...</span>
                     <div class="ocr-progress-container"><div id="ocrProgressBar" class="ocr-progress-bar"></div></div>
                 </div>
             </div>
@@ -38,13 +43,13 @@
                 <button id="btn-snap" class="btn-capture" disabled>📸 撮影して読み取る</button>
             </div>
 
-            <textarea id="ocrTextOutput" placeholder="AIの読み取り結果がここに表示されます。誤字があれば手動で修正してください。"></textarea>
+            <textarea id="ocrTextOutput" placeholder="撮影した画面の文字がここに読み込まれます。（2枚撮ると下に追記されます）"></textarea>
             
             <h2 class="panel-title" style="margin-top: 24px;">2. システム設定・複合変動要因</h2>
             <div class="form-row">
                 <div class="form-group">
-                    <label><span>店舗名</span> <span id="saveIndicator" style="color: var(--seven-green); font-size: 0.8rem;"></span></label>
-                    <input type="text" id="storeName" list="storeList" placeholder="店舗名を入力 (履歴から選択可能)">
+                    <label><span>店舗名</span></label>
+                    <input type="text" id="storeName" list="storeList" placeholder="店舗名を入力">
                     <datalist id="storeList"></datalist>
                 </div>
             </div>
@@ -96,7 +101,7 @@
                 </div>
             </div>
 
-            <button id="btn-analyze" class="btn-primary" disabled>⚡ AI 解析 ＆ 発注提案数算出</button>
+            <button id="btn-analyze" class="btn-primary">⚡ AI 解析 ＆ 発注提案数算出</button>
         </div>
 
         <div class="panel result-panel">
@@ -112,7 +117,7 @@
                     <strong id="dispBase">--</strong>
                 </div>
                 <div class="card">
-                    <span>AI 変動スコア</span>
+                    <span>在庫・廃棄・AI増減</span>
                     <strong id="dispScore" style="color: var(--seven-green);">--</strong>
                 </div>
                 <div class="card highlight">
