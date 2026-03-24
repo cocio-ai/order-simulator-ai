@@ -1,60 +1,116 @@
-/* （※基本的なダークモードの設定は前回と同じ。カメラ関連のみ追加・修正） */
 :root {
-    --bg-main: #0f172a;
-    --bg-panel: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #10b981;
-    --accent-hover: #059669;
-    --seven-orange: #f59e0b;
-    --seven-red: #ef4444;
-    --border: #334155;
+    /* 🌟 セブンイレブン ブランドカラー */
+    --seven-green: #00885A;
+    --seven-green-dark: #006643;
+    --seven-orange: #F58220;
+    --seven-red: #EE1C25;
+
+    --accent: var(--seven-green);       
+    --accent-dark: var(--seven-green-dark);  
+    --danger: var(--seven-red);
+    --warning: var(--seven-orange);
+    
+    --bg-body: #F4F5F7;       
+    --bg-card: #FFFFFF;
+    --text-main: #222222;     
+    --text-muted: #666666;
+    --border: #E0E0E0;
+    --input-bg: #F9F9F9;
+    --radius-card: 20px;
+    --radius-input: 12px;
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --shadow-float: 0 10px 30px rgba(0, 136, 90, 0.1);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", sans-serif; }
-body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; padding: 20px; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; -webkit-text-size-adjust: 100%; }
 
-.dashboard-wrapper { max-width: 1200px; margin: 0 auto; }
+/* 🌟 トップのブランドライン */
+body::before {
+    content: '';
+    display: block;
+    height: 6px;
+    width: 100%;
+    position: fixed;
+    top: 0; left: 0; z-index: 1000;
+    background: linear-gradient(to right, var(--seven-orange) 33.3%, var(--seven-green) 33.3%, var(--seven-green) 66.6%, var(--seven-red) 66.6%);
+}
+
+.dashboard-wrapper { padding: 40px 16px calc(50px + var(--safe-bottom)) 16px; max-width: 1200px; margin: 0 auto; }
+
 .header { margin-bottom: 24px; border-bottom: 2px solid var(--border); padding-bottom: 16px; }
-.header h1 { font-size: 1.8rem; font-weight: 800; display: flex; align-items: baseline; gap: 12px; }
-.header h1 span { font-size: 1rem; color: var(--accent); background: rgba(16, 185, 129, 0.1); padding: 4px 12px; border-radius: 20px; }
+.header h1 { text-align: center; font-size: 1.6rem; font-weight: 900; letter-spacing: 0.05em; color: var(--seven-green-dark); }
+.header h1 span { font-size: 1rem; color: var(--seven-orange); background: rgba(245, 158, 11, 0.1); padding: 4px 12px; border-radius: 20px; }
 
 .grid-container { display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; }
-@media (max-width: 800px) { .grid-container { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .grid-container { grid-template-columns: 1fr; } }
 
-.panel { background-color: var(--bg-panel); border-radius: 16px; padding: 24px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.panel-title { font-size: 1.2rem; margin-bottom: 8px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-.panel-title::before { content: ''; display: inline-block; width: 4px; height: 16px; background-color: var(--accent); }
-.panel-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; }
+.panel { background-color: var(--bg-card); border-radius: var(--radius-card); padding: 28px 24px; margin-bottom: 24px; box-shadow: var(--shadow-soft); border: 1px solid rgba(0, 136, 90, 0.1); }
+.panel-title { font-size: 1.2rem; margin-bottom: 8px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+.panel-title::before { content: ''; display: inline-block; width: 6px; height: 18px; border-radius: 3px; background: linear-gradient(180deg, var(--seven-orange) 33.3%, var(--seven-green) 33.3%, var(--seven-green) 66.6%, var(--seven-red) 66.6%); }
+.panel-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; font-weight: 600; }
 
 /* 🌟 カメラ関連のUI */
-.camera-container { position: relative; width: 100%; height: 240px; background-color: #0f172a; border-radius: 12px; overflow: hidden; border: 2px solid var(--border); margin-bottom: 16px; }
+.camera-container { position: relative; width: 100%; height: 280px; background-color: #333; border-radius: 12px; overflow: hidden; border: 2px solid var(--border); margin-bottom: 16px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.5); }
 video { width: 100%; height: 100%; object-fit: cover; }
 
-.camera-controls { display: flex; gap: 12px; }
-.btn-secondary { flex: 1; background-color: #334155; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-.btn-capture { flex: 2; background-color: var(--seven-red); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
-.btn-capture:disabled, .btn-secondary:disabled { opacity: 0.5; cursor: wait; }
+.camera-controls { display: flex; gap: 12px; margin-bottom: 16px; }
+.btn-secondary { flex: 1; background-color: #666; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+.btn-capture { flex: 2; background-color: var(--seven-red); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(238, 28, 37, 0.3); }
+.btn-capture:active { transform: scale(0.97); box-shadow: 0 2px 4px rgba(238, 28, 37, 0.3); }
+.btn-capture:disabled, .btn-secondary:disabled { opacity: 0.5; cursor: wait; box-shadow: none; }
 
-.ocr-status { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; z-index: 10; }
+.ocr-status { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px; z-index: 10; }
 .ocr-status .spinner { width: 30px; height: 30px; border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s linear infinite; }
-#ocrStatusText { font-size: 0.9rem; color: #fff; font-weight: bold; }
+#ocrStatusText { font-size: 0.95rem; color: #fff; font-weight: 800; }
+.ocr-progress-container { width: 80%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; overflow: hidden; }
+.ocr-progress-bar { width: 0%; height: 100%; background: var(--seven-orange); transition: width 0.3s ease; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* （以下、前回と同じ入力フォームやグラフのCSS） */
-textarea { width: 100%; height: 100px; background-color: #0f172a; color: var(--accent); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 13px; resize: vertical; margin-bottom: 16px; }
+/* 🌟 OCR読み取り結果テキストエリア */
+textarea { width: 100%; height: 110px; background-color: rgba(0, 136, 90, 0.05); color: var(--seven-green-dark); border: 2px solid rgba(0, 136, 90, 0.15); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 13px; resize: vertical; margin-bottom: 16px; }
+textarea:focus { outline: none; border-color: var(--seven-green); box-shadow: 0 0 0 3px rgba(0, 136, 90, 0.15); }
+
+/* 入力フォームUI */
 .form-row { display: flex; gap: 16px; margin-bottom: 16px; }
 .form-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-.form-group label { font-size: 0.85rem; color: var(--text-muted); }
-input[type="number"], input[type="date"] { padding: 12px; background-color: #0f172a; border: 1px solid var(--border); color: #fff; border-radius: 8px; font-size: 1rem; }
-.btn-primary { width: 100%; background-color: var(--accent); color: #fff; border: none; padding: 16px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-top: 16px; }
-.btn-primary:disabled { background-color: #334155; cursor: not-allowed; }
+label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; font-weight: 700; font-size: 0.85rem; color: var(--text-muted); }
+
+input[type="number"], input[type="text"], input[type="date"], select { width: 100%; padding: 16px; font-size: 16px; font-weight: 700; border: 2px solid var(--border); border-radius: var(--radius-input); background-color: var(--input-bg); color: var(--text-main); transition: 0.2s; appearance: none; -webkit-appearance: none; }
+select { cursor: pointer; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300885A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; padding-right: 44px; }
+input:focus, select:focus { outline: none; background-color: #FFFFFF; border-color: var(--seven-green); box-shadow: 0 0 0 4px rgba(0, 136, 90, 0.15); }
+input[readonly] { background-color: transparent; border: 2px dashed var(--border); text-align: center; color: var(--text-muted); }
+
+.flex-row { display: flex; gap: 16px; margin-bottom: 16px; }
+.flex-col { flex: 1; }
+.display-input-box { display: none; }
+
+/* 🌟 メインの計算ボタン */
+.btn-primary { width: 100%; padding: 20px; background: var(--seven-green); color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 900; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 15px rgba(0, 136, 90, 0.3); display: flex; justify-content: center; align-items: center; gap: 10px; margin: 10px 0 30px; position: relative; overflow: hidden; }
+.btn-primary::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, var(--seven-orange) 33.3%, var(--seven-green) 33.3%, var(--seven-green) 66.6%, var(--seven-red) 66.6%); }
+.btn-primary:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(0, 136, 90, 0.3); }
+.btn-primary:disabled { background-color: #666; cursor: wait; box-shadow: none; opacity: 0.7; }
+
+/* 🌟 算出結果ダッシュボードエリア */
+.result-card { background: #FFFFFF; color: var(--text-main); border-radius: var(--radius-card); padding: 32px 24px; box-shadow: var(--shadow-float); border: 2px solid var(--seven-green); }
+.result-card .panel-title { color: var(--seven-green-dark); }
+.result-header { font-size: 1.3rem; margin-bottom: 24px; border-bottom: 2px solid var(--border); padding-bottom: 16px; font-weight: 800; }
+
 .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-.card { background-color: #0f172a; border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-.card span { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
-.card strong { font-size: 1.8rem; color: #fff; line-height: 1; }
-.card.highlight { background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(16,185,129,0) 100%); border-color: var(--accent); }
-.card.highlight strong { font-size: 2.5rem; color: var(--accent); }
-.chart-container { background-color: #0f172a; border-radius: 12px; padding: 16px; height: 300px; margin-bottom: 24px; border: 1px solid var(--border); }
-.ai-commentary { background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--seven-orange); padding: 16px; border-radius: 8px; font-size: 0.95rem; color: #fcd34d; line-height: 1.6; }
+.card { background-color: var(--input-bg); border: 2px solid var(--border); border-radius: 16px; padding: 18px 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.card span { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
+.card strong { font-size: 1.8rem; color: var(--text-main); font-weight: 900; line-height: 1; }
+.card.highlight { background-color: rgba(0, 136, 90, 0.05); border-color: var(--seven-green); }
+.card.highlight strong { font-size: 2.5rem; color: var(--seven-green); text-shadow: 0 0 10px rgba(0, 136, 90, 0.2); }
+
+.chart-container { background-color: var(--bg-card); border-radius: 16px; padding: 16px; height: 300px; margin-bottom: 24px; border: 1px dashed var(--border); }
+
+/* 🌟 AIの解説コメントエリア */
+.ai-commentary { background: rgba(245, 158, 11, 0.05); border-left: 5px solid var(--seven-orange); padding: 20px; border-radius: 12px; font-size: 0.95rem; color: #D66D14; line-height: 1.6; font-weight: 700; }
+
+.backup-textarea { font-family: monospace; padding: 16px; background: #F9F9F9; border: 1px solid var(--border); font-size: 12px; color: #333; border-radius: 8px; margin-bottom: 16px; line-height: 1.5; }
+.backup-btn { flex: 1; padding: 16px; border-radius: 10px; font-weight: 800; font-size: 1rem; color: #fff; border: none; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.btn-create { background: #666; }
+.btn-restore { background: var(--seven-green); }
