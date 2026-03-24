@@ -3,120 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#0f172a">
-    <title>ORDER SIMULATOR: AI Core OCR</title>
+    <meta name="theme-color" content="#F4F5F7">
+    <title>ORDER SIMULATOR: AI Core (Speed Entry)</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="main.js" defer></script>
 </head>
 <body>
 
-<div class="dashboard-wrapper">
+<div class="app-wrapper">
     <header class="header">
-        <h1>ORDER SIMULATOR <span>AI Core OCR Prototype</span></h1>
+        <h1>ORDER SIMULATOR <span>AI Core Speed Entry</span></h1>
+        <div class="date-weather-info">
+            <input type="date" id="targetDate" class="stealth-input">
+            <span class="weather-box">今日: <input type="number" id="todayTemp" value="28" class="temp-input">℃</span>
+            <span class="weather-box">昨日: <input type="number" id="yesterdayTemp" value="22" class="temp-input">℃</span>
+        </div>
     </header>
 
     <div class="grid-container">
         <div class="panel input-panel">
+            <div class="category-select-box">
+                <select id="categoryName">
+                    <option value="" disabled selected>分類を選択してください</option>
+                    <option value="おにぎり">おにぎり</option>
+                    <option value="こだわりおにぎり">こだわりおにぎり</option>
+                    <option value="弁当">弁当（常温）</option>
+                    <option value="チルド弁当">チルド弁当</option>
+                    <option value="寿司">寿司</option>
+                    <option value="サンドイッチ">サンドイッチ</option>
+                    <option value="ロール">ロール</option>
+                    <option value="スパゲティパスタ">スパゲティパスタ</option>
+                    <option value="グラタンドリア">グラタンドリア</option>
+                    <option value="調理麺">調理麺（冷たい麺）</option>
+                    <option value="カップ麺">カップ麺</option>
+                    <option value="惣菜">惣菜</option>
+                    <option value="カップデリ">カップデリ</option>
+                    <option value="サラダ">サラダ</option>
+                </select>
+            </div>
+
+            <div class="input-fields-container">
+                <div class="input-row active" data-field="avgSales">
+                    <label>平均販売数 (週平均)</label>
+                    <div class="value-display" id="val-avgSales"></div>
+                </div>
+                <div class="input-row" data-field="currentStock">
+                    <label>現在庫 (発注時)</label>
+                    <div class="value-display" id="val-currentStock"></div>
+                </div>
+                <div class="flex-row">
+                    <div class="input-row half" data-field="maxSales">
+                        <label>最高販売</label>
+                        <div class="value-display" id="val-maxSales"></div>
+                    </div>
+                    <div class="input-row half" data-field="minSales">
+                        <label>最小販売</label>
+                        <div class="value-display" id="val-minSales"></div>
+                    </div>
+                </div>
+                <div class="flex-row">
+                    <div class="input-row half danger" data-field="avgWaste">
+                        <label>平均廃棄数</label>
+                        <div class="value-display" id="val-avgWaste"></div>
+                    </div>
+                    <div class="input-row half warning" data-field="avgShortageRate">
+                        <label>欠品率 (%)</label>
+                        <div class="value-display" id="val-avgShortageRate"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="custom-keypad">
+                <button class="key-btn num" data-num="7">7</button>
+                <button class="key-btn num" data-num="8">8</button>
+                <button class="key-btn num" data-num="9">9</button>
+                <button class="key-btn num" data-num="4">4</button>
+                <button class="key-btn num" data-num="5">5</button>
+                <button class="key-btn num" data-num="6">6</button>
+                <button class="key-btn num" data-num="1">1</button>
+                <button class="key-btn num" data-num="2">2</button>
+                <button class="key-btn num" data-num="3">3</button>
+                <button class="key-btn clear" id="btn-clear">C</button>
+                <button class="key-btn num" data-num="0">0</button>
+                <button class="key-btn next" id="btn-next">次へ ❯</button>
+            </div>
             
-            <div class="step-navigator" id="stepNavigator">
-                <div class="step-guide active" id="guideStep1">
-                    <span class="step-badge">1枚目</span> 4週間一覧表（週平均）
-                </div>
-                <div class="step-guide" id="guideStep2">
-                    <span class="step-badge" style="background:#666;">2枚目</span> 在庫推移表（現在庫）
-                </div>
-            </div>
-
-            <div class="camera-container">
-                <video id="cameraVideo" autoplay playsinline muted></video>
-                <canvas id="captureCanvas" style="display:none;"></canvas>
-                
-                <div id="ocrStatus" class="ocr-status" style="display:none;">
-                    <div class="spinner"></div>
-                    <span id="ocrStatusText">AIエンジン読込中...</span>
-                    <div class="ocr-progress-container"><div id="ocrProgressBar" class="ocr-progress-bar"></div></div>
-                </div>
-            </div>
-
-            <div class="camera-controls">
-                <button id="btn-start-camera" class="btn-secondary">📷 カメラ起動</button>
-                <button id="btn-snap" class="btn-capture" disabled>📸 1枚目(4週間一覧)を撮影</button>
-            </div>
-
-            <textarea id="ocrTextOutput" placeholder="撮影した文字データがここに蓄積されます。"></textarea>
-            <button id="btn-reset-ocr" style="display:none; width:100%; padding:10px; margin-bottom:16px; background:#666; color:#fff; border:none; border-radius:8px;">最初から撮り直す</button>
-            
-            <h2 class="panel-title" style="margin-top: 24px;">システム設定・複合変動要因</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label><span>店舗名</span></label>
-                    <input type="text" id="storeName" list="storeList" placeholder="店舗名を入力">
-                    <datalist id="storeList"></datalist>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>対象分類 (カニバリ判定用)</label>
-                    <select id="categoryName">
-                        <option value="" disabled selected>OCRで自動選択</option>
-                        <option value="おにぎり">おにぎり</option>
-                        <option value="こだわりおにぎり">こだわりおにぎり</option>
-                        <option value="弁当">弁当（常温）</option>
-                        <option value="寿司">寿司</option>
-                        <option value="チルド弁当">チルド弁当</option>
-                        <option value="サンドイッチ">サンドイッチ</option>
-                        <option value="ロール">ロール</option>
-                        <option value="スパゲティパスタ">スパゲティパスタ</option>
-                        <option value="グラタンドリア">グラタンドリア</option>
-                        <option value="カップ麺">カップ麺</option>
-                        <option value="調理麺">調理麺（冷たい麺）</option>
-                        <option value="惣菜">惣菜</option>
-                        <option value="カップデリ">カップデリ</option>
-                        <option value="サラダ">サラダ</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-row" style="margin-top: 16px;">
-                <div class="form-group">
-                    <label>対象日 (給料日等判定)</label>
-                    <input type="date" id="targetDate">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>本日最高気温 (℃)</label>
-                    <input type="number" inputmode="numeric" id="todayTemp" value="28">
-                </div>
-                <div class="form-group">
-                    <label>昨日最高気温 (℃)</label>
-                    <input type="number" inputmode="numeric" id="yesterdayTemp" value="22">
-                </div>
-            </div>
-
-            <button id="btn-analyze" class="btn-primary" disabled>⚡ AI 解析 ＆ 発注提案数算出</button>
+            <button id="btn-analyze" class="btn-primary" disabled>⚡ AI 解析実行</button>
         </div>
 
         <div class="panel result-panel">
-            <h2 class="panel-title">AI 思考プロセス可視化（ダッシュボード）</h2>
-            
             <div class="result-header">
-                <strong id="resCategory">未算出</strong> <span id="resStoreText" style="font-size:0.85rem; color:var(--text-muted); font-weight:normal; margin-left:10px;"></span>
+                <strong id="resCategory">未算出</strong>
             </div>
 
             <div class="summary-cards">
                 <div class="card">
-                    <span>基本需要 (週平均)</span>
+                    <span>基本需要</span>
                     <strong id="dispBase">--</strong>
                 </div>
                 <div class="card">
-                    <span>在庫・廃棄・AI増減</span>
+                    <span>AI 変動スコア</span>
                     <strong id="dispScore" style="color: var(--seven-green);">--</strong>
                 </div>
                 <div class="card highlight">
-                    <span>AI 提案発注数</span>
+                    <span>最終 提案発注数</span>
                     <strong id="dispFinalOrder">-- <small>個</small></strong>
                 </div>
             </div>
